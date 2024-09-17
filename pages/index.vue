@@ -3,13 +3,6 @@
     tutorial
 </template>
 
-<script>
+<script setup lang="ts">
 import Tutorial from '~/components/Tutorial.vue'
-
-export default {
-  name: 'IndexPage',
-  components: {
-    Tutorial
-  }
-}
 </script>

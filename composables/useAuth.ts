@@ -1,9 +1,7 @@
 import {computed, ref} from 'vue'
-import {useNuxtApp} from "nuxt/app"
-
 
 // import {login as loginService, logout as logoutService} from '@/services/authService'
-import useApiService from '@/services/authService'
+// import useApiService from '@/services/authService'
 
 // export function useAuth() {
 //   const user = ref(null);
@@ -29,14 +27,14 @@ import useApiService from '@/services/authService'
 //   };
 // }
 
-const authService = useNuxtApp().$authService
+import useApiService from '@/services/authService'
 
 const user = ref(null)
-
-
 const login = async (credentials: { email: string, password: string }) => {
+
   try {
-    const response = await authService.login(credentials)
+    const apiService = useApiService()
+    const response = await apiService.login(credentials)
     localStorage.setItem('accessToken', response.data.token)
     user.value = response.data
   } catch (error) {
