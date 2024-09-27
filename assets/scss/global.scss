@@ -1,0 +1,29 @@
+@use './_vars.scss' as *;
+@use './_mixins.scss' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+html, body, #nuxt {
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+
+input, textarea, select {
+  outline: none;
+}
+
+input, textarea, select, button {
+  background: transparent;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+}

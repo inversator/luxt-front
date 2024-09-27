@@ -12,7 +12,7 @@
           >
             Sign in to your account
             <span class="text-red-500 text-xl" v-if="isAuthenticated"
-            >By the way, you authorized!</span
+              >By the way, you authorized!</span
             >
           </h1>
           <form
@@ -24,7 +24,7 @@
               <label
                 for="email"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Your email</label
+                >Your email</label
               >
               <input
                 type="email"
@@ -40,7 +40,7 @@
               <label
                 for="password"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Password</label
+                >Password</label
               >
               <input
                 v-model="password"
@@ -64,14 +64,14 @@
                 </div>
                 <div class="ml-3 text-sm">
                   <label for="remember" class="text-gray-500 dark:text-gray-300"
-                  >Remember me</label
+                    >Remember me</label
                   >
                 </div>
               </div>
               <a
                 href="#"
                 class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-              >Forgot password?</a
+                >Forgot password?</a
               >
             </div>
             <button
@@ -86,7 +86,7 @@
               <a
                 href="#"
                 class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-              >Sign up</a
+                >Sign up</a
               >
             </p>
           </form>
@@ -97,10 +97,8 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import useAuth from '~/composables/useAuth';
-
-const {login, isAuthenticated, logout} = useAuth();
+import { ref } from 'vue';
+import { login, isAuthenticated } from '~/composables/useAuth';
 
 // Set template
 definePageMeta({
@@ -108,7 +106,7 @@ definePageMeta({
 });
 
 // import { useNuxtApp } from '#app';
-const {$apiClient} = useNuxtApp();
+const { $apiClient } = useNuxtApp();
 
 const email = ref('');
 const password = ref('');
@@ -116,17 +114,14 @@ const password = ref('');
 
 const handleSubmit = async () => {
   try {
-    await login({email: email.value, password: password.value});
-    // await logout();
-    // await useRouter().push('/');
-    await $apiClient.get('/v1/pages')
+    await login({ email: email.value, password: password.value });
 
+    await useRouter().push('/');
+    // await $apiClient.get('/v1/pages')
   } catch (error) {
     console.error(error);
     // Handle login error
   }
 };
 </script>
-<style lang="scss">
-
-</style>
+<style scoped></style>

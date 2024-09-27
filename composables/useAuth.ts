@@ -1,57 +1,32 @@
-import {computed, ref} from 'vue'
 
-// import {login as loginService, logout as logoutService} from '@/services/authService'
-// import useApiService from '@/services/authService'
+import { useState } from '#app';
+import { computed } from 'vue';
+import useApiService from '@/services/authService';
 
-// export function useAuth() {
-//   const user = ref(null);
-//   const error = ref(null);
-//
-//   const loginUser = async (email: string, password: string) => {
-//     try {
-//       const response = await login(email, password);
-//       console.info(response)
-//       localStorage.setItem('token', response.data.token);
-//     } catch (e) {
-//       console.error(e)
-//     }
-//   };
-//
-//   // Другие функции: registerUser, logoutUser, refreshToken, getCurrentUser
-//
-//   return {
-//     user,
-//     error,
-//     loginUser,
-//     // Другие функции
-//   };
-// }
+export default function useAuth() {
+  const user = useState('user', () => null);
+  const apiService = useApiService();
 
-import useApiService from '@/services/authService'
+  const login = async (credentials: { email: string; password: string }) => {
+    try {
+      const response = await apiService.login(credentials);
+      user.value = response.user;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
-const user = ref(null)
-const login = async (credentials: { email: string, password: string }) => {
+  const logout = async () => {
+    try {
+      await apiService.logout();
+      user.value = null;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  try {
-    const apiService = useApiService()
-    const response = await apiService.login(credentials)
-    localStorage.setItem('accessToken', response.data.token)
-    user.value = response.data
-  } catch (error) {
-    console.error(error)
-    throw error;
-  }
+  const isAuthenticated = computed(() => user.value !== null);
+
+  return { user, login, logout, isAuthenticated };
 }
-
-const logout = async () => {
-  try {
-    // await logoutService()
-    user.value = null
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-const isAuthenticated = computed(() => user.value !== null)
-
-export {user, login, logout, isAuthenticated}

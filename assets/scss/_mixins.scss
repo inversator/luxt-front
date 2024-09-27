@@ -1,0 +1,16 @@
+@mixin Title {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: -0.03em;
+}
+
+@mixin k-border {
+  border: 1px solid lightgray;
+  border-radius: 4px;
+}
+
+@mixin k-border-debug {
+  border: 1px dotted red;
+  border-radius: 4px;
+}
