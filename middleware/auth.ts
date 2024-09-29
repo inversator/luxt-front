@@ -1,24 +1,26 @@
 import useApiService from '@/services/authService';
+import {useUserStore} from '@/stores/useUserStore';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const user = useState('user')
+  const userStore = useUserStore();
+
   console.info('Auth middleware')
 
-  if (user.value === undefined || !user.value) {
+  if (!userStore.isAuthenticated) {
     try {
       const apiService = useApiService();
       const response = await apiService.checkUser();
-      user.value = response.user;
+      userStore.setUser(response.data);
+
+      console.log('Got user from checker', userStore.user)
     } catch (error) {
       console.error('Auth middleware error', error);
-      user.value = null
+      userStore.clearUser()
     }
-
   } else {
-    console.log('user', user)
+    console.log('user', userStore.user)
   }
 
-  console.log(user.value)
   //
   // if (!user.value && to.path !== '/login') {
   //   return navigateTo('/login')

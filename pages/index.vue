@@ -6,18 +6,24 @@
 <script setup lang="ts">
 import Tutorial from '~/components/Tutorial.vue';
 import useAuth from '~/composables/useAuth';
+import {useUserStore} from '~/stores/useUserStore'
 
-const {user, isAuthenticated} = useAuth();
+const {$apiClient} = useNuxtApp();
+const {isAuthenticated} = useAuth();
+const {user} = useUserStore();
 
 onMounted(async () => {
-  // console.log(isAuthenticated)
-  // if (isAuthenticated) {
-  //   console.info('User is authenticated');
-  //
-  //   console.log(user.value);
-  // } else {
-  //   console.info('User is not authenticated');
-  // }
+  console.log(isAuthenticated)
+  if (isAuthenticated) {
+    console.info('User is authenticated');
+
+    // Authorization check
+    await $apiClient.get('/v1/pages')
+
+    console.log(user);
+  } else {
+    console.info('User is not authenticated');
+  }
 })
 
 useSeoMeta({

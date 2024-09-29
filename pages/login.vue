@@ -11,9 +11,7 @@
             class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
           >
             Sign in to your account
-            <span class="text-red-500 text-xl" v-if="isAuthenticated"
-            >By the way, you authorized!</span
-            >
+            <span class="text-red-500 text-xl" v-if="isAuthenticated">By the way, you authorized!</span>
           </h1>
           <form
             @submit.prevent="handleSubmit"
@@ -97,33 +95,33 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import useAuth from '~/composables/useAuth';
+import {useUserStore} from '~/stores/useUserStore';
 
-const {login, isAuthenticated, logout} = useAuth();
+const {login, logout} = useAuth();
+const userStore = useUserStore();
+
+const isAuthenticated = computed(() => userStore.isAuthenticated);
 
 // Set template
 definePageMeta({
   layout: 'custom',
 });
 
-// import { useNuxtApp } from '#app';
-const {$apiClient} = useNuxtApp();
-
 const email = ref('');
 const password = ref('');
-// const {loginUser, error} = useAuth();
 
 const handleSubmit = async () => {
-  try {
-    await login({email: email.value, password: password.value});
-    // await logout();
-    // await useRouter().push('/');
-    await $apiClient.get('/v1/pages')
-
-  } catch (error) {
-    console.error(error);
-    // Handle login error
+  if (!isAuthenticated.value) {
+    try {
+      await login({email: email.value, password: password.value});
+      // await useRouter().push('/');
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    await logout();
   }
 };
 </script>

@@ -1,37 +1,18 @@
-import { useNuxtApp } from '#app';
+import {useNuxtApp} from '#app';
 
-const useApiService = () => {
-  const { $apiClient } = useNuxtApp();
+export default function useApiService() {
+  const {$apiClient} = useNuxtApp();
 
-  const login = async (credentials) => {
-    try {
-      const response = await $apiClient.post('/v1/auth/login', credentials);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  const handleRequest = (requestFunction) => {
+    return requestFunction().then(response => response).catch(error => {
+      console.error('Auth service failure', error)
+      throw error
+    })
   };
 
-  const checkUser = async () => {
-    try {
-      const response = await $apiClient.get('/v1/user/');
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const logout = async () => {
-    try {
-      const response = await $apiClient.post('/v1/auth/logout');
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  const login = credentials => handleRequest(() => $apiClient.post('/v1/auth/login', credentials));
+  const checkUser = () => handleRequest(() => $apiClient.get('/v1/user/'));
+  const logout = () => handleRequest(() => $apiClient.post('/v1/auth/logout'));
 
   return {
     login,
@@ -39,5 +20,3 @@ const useApiService = () => {
     logout,
   };
 };
-
-export default useApiService;

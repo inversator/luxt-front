@@ -1,16 +1,19 @@
-
-import { useState } from '#app';
-import { computed } from 'vue';
+// import { useState } from '#app';
+import {computed} from 'vue';
 import useApiService from '@/services/authService';
+import {useUserStore} from '@/stores/useUserStore';
 
 export default function useAuth() {
-  const user = useState('user', () => null);
+  // const user = useState('user', () => null);
+  const userStore = useUserStore();
   const apiService = useApiService();
 
   const login = async (credentials: { email: string; password: string }) => {
     try {
       const response = await apiService.login(credentials);
-      user.value = response.user;
+      console.log('writing user data in composable useAuth', response.data.user)
+      userStore.setUser(response.data.user);
+
     } catch (error) {
       console.error(error);
       throw error;
@@ -20,13 +23,13 @@ export default function useAuth() {
   const logout = async () => {
     try {
       await apiService.logout();
-      user.value = null;
+      userStore.clearUser();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const isAuthenticated = computed(() => user.value !== null);
+  const isAuthenticated = computed(() => userStore.isAuthenticated);
 
-  return { user, login, logout, isAuthenticated };
+  return {login, logout, isAuthenticated};
 }
